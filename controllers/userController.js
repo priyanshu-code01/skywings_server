@@ -58,7 +58,7 @@ export const loginUser = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true, // XSS attack se bachata hai
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax", // CSRF attack se bachata hai
+      sameSite: "none", // CSRF attack se bachata hai
       maxAge: 24 * 60 * 60 * 1000, // 1 Din (24 hours)
     });
 
