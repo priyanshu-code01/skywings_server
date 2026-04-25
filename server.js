@@ -17,7 +17,7 @@ const app = express();
 // 1. Simple but Effective CORS
 const allowedOrigins = [
   "https://skywings-weld.vercel.app",
-  "http://localhost:5173", // development ke liye
+  "https://skywings-c72g.vercel.app",
 ];
 
 app.use(
