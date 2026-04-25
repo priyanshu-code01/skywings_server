@@ -14,12 +14,26 @@ connectDB();
 
 const app = express();
 
-// 👇 NAYA: CORS Update 👇
-// Ab backend dono frontend (Client aur Admin) se baat kar payega
+// 1. Manually setting Headers for CORS (Extra Safety)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Sabhi ko allow karega
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  );
+
+  // Agar Preflight (OPTIONS) request hai toh turant response bhejo
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  next();
+});
+
+// 2. Standard CORS Middleware
 app.use(
   cors({
-    origin: "*", // Sabhi origins allow honge (Best for testing)
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
     credentials: true,
   }),
 );
@@ -32,12 +46,11 @@ app.use("/api/users", userRoutes);
 app.use("/api/flights", flightRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-// Health Check Route
 app.get("/", (req, res) => {
-  res.send("SkyWings API is running and ready for production...");
+  res.send("SkyWings API is running...");
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
