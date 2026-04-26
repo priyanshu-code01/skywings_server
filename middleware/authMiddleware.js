@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-// 1. Protect routes (Check if user is logged in)
+// Protect routes
 export const protect = async (req, res, next) => {
   try {
     const token = req.cookies.token;
@@ -21,9 +21,9 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// 2. Admin access (Check if user is Admin)
+// Admin access
 export const admin = (req, res, next) => {
-  const adminEmail = "admin@skywings.com"; // System ka mukhya Admin
+  const adminEmail = "priyanshu.code01@gmail.com";
 
   if (req.user && req.user.email === adminEmail) {
     next();

@@ -1,7 +1,7 @@
 import Booking from "../models/Booking.js";
 import Flight from "../models/Flight.js";
 
-// 1. Book a Flight (User Feature)
+// Book a Flight
 export const bookFlight = async (req, res) => {
   try {
     const { flightId, flightClass, seatNumbers, totalAmount } = req.body;
@@ -32,7 +32,7 @@ export const bookFlight = async (req, res) => {
   }
 };
 
-// 2. Get User's Bookings (User Feature)
+// Get User's Bookings
 export const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user._id }).populate(
@@ -44,12 +44,11 @@ export const getMyBookings = async (req, res) => {
   }
 };
 
-// 👇 NAYE ADMIN FEATURES YAHAN SE SHURU HAIN 👇
+// Admin Features
 
-// 3. Get All Bookings (Admin Only)
+// Get All Bookings (Admin Only)
 export const getAllBookings = async (req, res) => {
   try {
-    // Admin ko pata hona chahiye ki booking kisne ki hai (user) aur kaunsi flight hai (flight)
     const bookings = await Booking.find()
       .populate("user", "name email")
       .populate("flight", "flightNumber airlineName source destination");
@@ -60,15 +59,15 @@ export const getAllBookings = async (req, res) => {
   }
 };
 
-// 4. Update Booking Status (Admin Only)
+// Update Booking Status (Admin Only)
 export const updateBookingStatus = async (req, res) => {
   try {
-    const { status } = req.body; // 'Confirmed' ya 'Cancelled'
+    const { status } = req.body;
 
     const updatedBooking = await Booking.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }, // Ye true karne se database updated data return karta hai
+      { new: true },
     );
 
     if (!updatedBooking) {
