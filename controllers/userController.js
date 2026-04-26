@@ -59,7 +59,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true, // XSS attack se bachata hai
       secure: process.env.NODE_ENV === "production",
       sameSite: "none", // CSRF attack se bachata hai
-      Partitioned: true,
+      partitioned: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 Din (24 hours)
     });
 
