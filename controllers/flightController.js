@@ -55,28 +55,25 @@ export const addFlight = async (req, res) => {
 // 2. Search Flights (Frontend se search form ke liye)
 export const searchFlights = async (req, res) => {
   try {
-    const { source, destination, date } = req.query;
+    const { source, destination } = req.query; // date ko destructing se hata diya kyunki ab filter nahi karna
 
     // Base query
     let query = {};
 
-    if (source) query.source = new RegExp(source, "i"); // 'i' matlab case-insensitive (Delhi ya delhi same hai)
+    // Source search (Delhi, delhi, DELHI sab match karega)
+    if (source) query.source = new RegExp(source, "i");
+
+    // Destination search
     if (destination) query.destination = new RegExp(destination, "i");
 
-    // Agar user ne date select ki hai, toh us poore din ki flights dhoondho
-    if (date) {
-      const searchDate = new Date(date);
-      const nextDate = new Date(searchDate);
-      nextDate.setDate(nextDate.getDate() + 1);
+    // Logic: Ab hum date match nahi kar rahe,
+    // bas find karenge aur price ke hisaab se sort kar denge
+    const flights = await Flight.find(query).sort({ economyPrice: 1 });
 
-      query.departureTime = {
-        $gte: searchDate, // Greater than or equal to that day
-        $lt: nextDate, // Less than the next day
-      };
-    }
-
-    const flights = await Flight.find(query);
-    res.status(200).json({ count: flights.length, flights });
+    res.status(200).json({
+      count: flights.length,
+      flights,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
